@@ -15,7 +15,7 @@ documentation = "https://docs.antinna.in/"
 repository = "https://github.com/antinna/rust-salvo-backend"
 
 [workspace]
-members = [ "crates/*"]
+members = [ "crates/*", "features/*"]
 default-members = ["crates/server"]
 resolver = "3"
 
@@ -34,4 +34,5 @@ tracing-appender = "0.2.4"
 tracing-subscriber = "0.3.23"
 figment = "0.10.19"
 lettre = { version = "0.11.19",default-features = false }
+rust-embed = "8.11.0"
 

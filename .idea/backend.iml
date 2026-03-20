@@ -12,6 +12,7 @@
       <sourceFolder url="file://$MODULE_DIR$/crates/services/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/routers/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/utils/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/features/landing/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

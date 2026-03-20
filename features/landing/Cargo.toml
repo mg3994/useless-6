@@ -1,5 +1,5 @@
 [package]
-name = "routers"
+name = "landing"
 version.workspace = true
 description.workspace = true
 edition.workspace = true
@@ -14,5 +14,3 @@ documentation.workspace = true
 repository.workspace = true
 
 [dependencies]
-rust-embed.workspace = true
-salvo= { workspace = true,features = ["serve-static","logging","oapi"] }
