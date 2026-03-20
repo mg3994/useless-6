@@ -1,0 +1,37 @@
+[workspace.package]
+version = "0.1.0"
+description = """
+A Backend Server
+"""
+edition = "2024"
+authors = ["Antinna <contact@antinna.in>"]
+license = "BSD-3"
+readme = "ReadMe.md"
+keywords = ["salvo","Antinna"]
+categories = ["api-bindings", "web-programming"]
+homepage = "antinna.in"
+publish = false
+documentation = "https://docs.antinna.in/"
+repository = "https://github.com/antinna/rust-salvo-backend"
+
+[workspace]
+members = [ "crates/*"]
+default-members = ["crates/server"]
+resolver = "3"
+
+
+[workspace.dependencies]
+
+tokio = { version = "1.50.0" }
+salvo = {version =  "0.89.3" }
+serde = { version = "1.0.228" }
+thiserror = "2.0.18"
+anyhow = "1.0.102"
+validator = "0.20.0"
+sqlx = "0.9.0-alpha.1"
+tracing = "0.1.44"
+tracing-appender = "0.2.4"
+tracing-subscriber = "0.3.23"
+figment = "0.10.19"
+lettre = { version = "0.11.19",default-features = false }
+

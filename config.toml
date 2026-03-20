@@ -1,0 +1,34 @@
+listen_addr = "127.0.0.1:8008"
+
+[db]
+url = "postgres://postgres:root@127.0.0.1:5432/backend"
+
+
+[log]
+file_name = "app.log"
+rolling = "daily"
+# added by Manish  (below), also prefer stf::fs there to load those in main
+[tls]
+cert = "certs/pem/cert.pem"
+key = "certs/pem/key.pem"
+
+# ==================================
+# SMTP Settings
+# ==================================
+[smtp]
+host = "smtp.gmail.com"
+port = 465
+secure = true
+from = '"Antinna" <contact@antinna.in>'
+
+[smtp.auth]
+user = "manishgautammg7@gmail.com"
+pass = "your-16-char-app-password"
+
+
+[s3]
+endpoint = "http://127.0.0.1:3900"
+region = "garage"
+access_key = "GK2acaa3c15b3426dbbbba4005"
+secret_key = "4ccea4d1bb1971947b468d1aef1f162503ba116f58ef7dea0431dc90dea439e8"
+bucket = "my-s3-bucket"
