@@ -21,7 +21,7 @@ resolver = "3"
 
 
 [workspace.dependencies]
-
+rustls = "0.23"
 tokio = { version = "1.50.0" }
 salvo = {version =  "0.89.3" }
 serde = { version = "1.0.228" }
@@ -35,4 +35,5 @@ tracing-subscriber = "0.3.23"
 figment = "0.10.19"
 lettre = { version = "0.11.19",default-features = false }
 rust-embed = "8.11.0"
+askama = "0.15.4"
 

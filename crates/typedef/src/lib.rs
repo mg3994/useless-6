@@ -1,6 +1,6 @@
 use salvo::prelude::*;
 use serde::Serialize;
-use app_error::AppError;
+pub use app_error::AppError;
 
 #[derive(Serialize, ToSchema, Clone, Copy, Debug)]
 pub struct Empty {}

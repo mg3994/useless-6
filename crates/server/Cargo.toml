@@ -12,7 +12,9 @@ publish.workspace = true
 repository.workspace = true
 
 [dependencies]
-salvo= { workspace = true, features = ["anyhow","rustls","quinn"] }
+# must version 0.23 for rustls //will think about new  migrations in future
+rustls = {workspace = true,features = ["ring"]}
+salvo= { workspace = true, features = ["anyhow","rustls","quinn","cors"] }
 tokio= { workspace = true,features = ["full"] }
 app_error ={path = "../app_error"}
 db = {path = "../db"}
@@ -22,3 +24,4 @@ services = {path = "../services"}
 typedef = {path = "../typedef"}
 utils = {path = "../utils"}
 tracing.workspace = true
+error404 ={path = "../../features/error404"}

@@ -5,3 +5,6 @@ pub use routers;
 pub use services;
 pub use typedef;
 pub use utils;
+
+// #### Features and Hoops
+pub use error404;

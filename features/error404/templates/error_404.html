@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 Page Not Found</title>
+    <style>
+        body {
+            display: grid;
+            place-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            padding: 2rem;
+        }
+        .container {
+            text-align: center;
+        }
+        .code {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #0284c7; /* blue-ish */
+        }
+        h1 {
+            margin-top: 1rem;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1e3a8a; /* dark blue */
+        }
+        .buttons {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #16a34a; /* green */
+        }
+        .btn:hover {
+            background-color: #15803d;
+        }
+        .link {
+            font-weight: bold;
+            color: #1e3a8a;
+            text-decoration: none;
+        }
+        .link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <p class="code">404</p>
+    <h1>{{ brief }}</h1>
+    <div class="buttons">
+        <a href="/" class="btn">Return to homepage</a>
+        <a href="#" class="link">Contact Support &rarr;</a>
+    </div>
+</div>
+</body>
+</html>
