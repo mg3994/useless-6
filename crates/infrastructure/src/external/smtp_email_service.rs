@@ -1,13 +1,14 @@
 
 use lettre::transport::smtp::authentication::Credentials;
 use lettre::{Message, AsyncSmtpTransport, AsyncTransport, Tokio1Executor};
+use lettre::message::{header, SinglePart};
 use lettre::transport::smtp::client::{Tls, TlsParameters};
 use salvo::async_trait;
 use app_error::AppError;
 use services::email_service::EmailService;
 use crate::config::SmtpConfig;
 
-
+#[derive(Debug)]
 pub struct SmtpEmailService {
     config: SmtpConfig,
     transport: AsyncSmtpTransport<Tokio1Executor>,
@@ -52,7 +53,9 @@ impl EmailService for SmtpEmailService {
         to: &str,
         subject: &str,
         body: &str,
+        is_html: Option<bool>,
     ) -> Result<(), AppError> {
+        let is_html = is_html.unwrap_or(false);
         let from = self.config.from.parse().map_err(|e| {
             AppError::Internal(format!("Invalid 'from' address: {}", e))
         })?;
@@ -61,11 +64,20 @@ impl EmailService for SmtpEmailService {
             AppError::Internal(format!("Invalid 'to' address: {}", e))
         })?;
 
+        let content_type = if is_html {
+            header::ContentType::TEXT_HTML
+        } else {
+            header::ContentType::TEXT_PLAIN
+        };
+
         let email = Message::builder()
             .from(from)
             .to(to_addr)
             .subject(subject)
-            .body(body.to_string())
+            .singlepart(
+                SinglePart::builder().header(content_type).body(body.to_string())
+            )
+
             .map_err(|e| AppError::Internal(format!("Failed to build email: {}", e)))?;
 
         self.transport.send(email).await

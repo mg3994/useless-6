@@ -22,3 +22,7 @@ lettre = {workspace = true, default-features = false,features = ["tokio1-rustls-
 salvo.workspace = true
 app_error = {path = "../app_error"}
 services = {path = "../services"}
+
+aws-sdk-s3 = {workspace = true,features = ["rt-tokio"]}
+aws-config = {workspace = true,features = ["behavior-version-latest"]}
+typedef = {path = "../typedef"}

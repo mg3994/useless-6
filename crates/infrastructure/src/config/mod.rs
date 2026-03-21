@@ -15,7 +15,7 @@ pub use log_config::LogConfig;
 pub use db_config::DbConfig;
 
 pub use smtp_config::SmtpConfig;
-use s3_config::S3Config;
+pub(crate) use s3_config::S3Config;
 
 pub static CONFIG: OnceLock<ServerConfig> = OnceLock::new();
 pub fn init()  {

@@ -14,6 +14,8 @@
       <sourceFolder url="file://$MODULE_DIR$/crates/utils/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/features/error404/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/features/landing/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/s3/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/smtp/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

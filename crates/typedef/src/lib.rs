@@ -8,3 +8,9 @@ pub struct Empty {}
 pub type AppResult<T> = Result<T, AppError>;
 pub type JsonResult<T> = Result<Json<T>, AppError>;
 pub type EmptyResult = Result<Json<Empty>, AppError>;
+
+#[derive(Debug, Clone)]
+pub struct UploadResult {
+    pub url: String,
+    pub etag: Option<String>,
+}

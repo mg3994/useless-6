@@ -8,5 +8,6 @@ pub trait EmailService: Send + Sync {
         to: &str,
         subject: &str,
         body: &str,
+        is_html: Option<bool>,
     ) -> Result<(), AppError>;
 }
