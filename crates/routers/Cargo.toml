@@ -17,3 +17,4 @@ repository.workspace = true
 rust-embed.workspace = true
 salvo= { workspace = true,features = ["serve-static","logging","oapi"] }
 typedef = {path = "../typedef"}
+diagnostics = {path = "../../features/diagnostics"}

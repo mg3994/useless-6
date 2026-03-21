@@ -35,7 +35,8 @@ tracing-subscriber = "0.3.23"
 figment = "0.10.19"
 lettre = { version = "0.11.19",default-features = false }
 rust-embed = "8.11.0"
-askama = "0.15.4"
+askama = "0.15.5"
 aws-sdk-s3 = "1.127.0"
 aws-config = "1.8.15"
+
 

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Diagnostics Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; padding: 2rem; color: #333; line-height: 1.6; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem; }
+        .card { background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 0.5rem; margin-top: 0; font-size: 1.25rem; color: #2c3e50; }
+
+        /* Form Elements */
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-family: inherit; }
+        button { background: #2c3e50; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; transition: background 0.2s; font-weight: 600; }
+        button:hover { background: #34495e; }
+        button.delete-btn { background: #e74c3c; margin-top: 10px; }
+        button.delete-btn:hover { background: #c0392b; }
+
+        /* S3 Specific */
+        #drop-zone { border: 2px dashed #3498db; padding: 2.5rem; text-align: center; background: #ebf5fb; border-radius: 8px; cursor: pointer; transition: 0.3s; margin-bottom: 1rem; }
+        #drop-zone.hover { background: #d4e6f1; border-color: #2980b9; }
+        .url-fetcher { background: #f9f9f9; padding: 1rem; border-radius: 6px; border: 1px solid #eee; margin-top: 1rem; }
+
+        /* Output Logs */
+        .log-box { background: #272822; color: #f8f8f2; padding: 1rem; border-radius: 6px; margin-top: 1rem; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; max-height: 250px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; }
+        .status-tag { padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<h1>🛠️ System Diagnostics <small style="font-size: 1rem; color: #7f8c8d;">Target S3 be: s3.antinna.in</small></h1>
+
+<div class="grid">
+
+    <div class="card">
+        <h2>📦 S3 Storage (Direct Stream)</h2>
+        <div id="drop-zone">Drag browser file here to stream to S3</div>
+
+        <div class="url-fetcher">
+            <input type="text" id="s3-key-input" placeholder="Enter key (e.g. diagnostics/test.png)">
+            <div style="display: flex; gap: 10px;">
+                <button style="flex: 1;" onclick="getS3Url()">Get URL</button>
+                <button style="flex: 1;" class="delete-btn" onclick="deleteS3File()">Delete Key</button>
+            </div>
+        </div>
+
+        <div id="s3-log" class="log-box">Awaiting action...</div>
+    </div>
+
+    <div class="card">
+        <h2>🗄️ Database (Postgres)</h2>
+        <p>Status:
+            {% if db_alive %}
+            <span class="status-tag" style="background: #d4edda; color: #155724;">● Online</span>
+            {% else %}
+            <span class="status-tag" style="background: #f8d7da; color: #721c24;">● Offline</span>
+            {% endif %}
+        </p>
+        <textarea id="db-query" rows="4" placeholder="SELECT * FROM users LIMIT 5;"></textarea>
+        <button onclick="runQuery()">Run Custom Query</button>
+        <div id="db-log" class="log-box">Query results will appear here...</div>
+    </div>
+
+    <div class="card">
+        <h2>📧 SMTP Email</h2>
+        <input type="email" id="smtp-to" placeholder="Recipient Email">
+        <input type="text" id="smtp-sub" placeholder="Subject" value="Diagnostic Test">
+        <textarea id="smtp-body" rows="4" placeholder="Email body...">This is a test email from the Antinna diagnostics dashboard.</textarea>
+        <label style="font-size: 0.85rem; margin-bottom: 10px; display: block;">
+            <input type="checkbox" id="smtp-is-html" style="width: auto; margin-right: 8px;"> Send as HTML
+        </label>
+        <button onclick="sendTestEmail()">Send Test Email</button>
+        <div id="smtp-log" class="log-box">SMTP log output...</div>
+    </div>
+
+</div>
+
+<script>
+    const s3Log = document.getElementById('s3-log');
+
+    // --- S3: Direct Binary Upload (No Multipart) ---
+    const dropZone = document.getElementById('drop-zone');
+    dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('hover'); };
+    dropZone.ondragleave = () => dropZone.classList.remove('hover');
+    dropZone.ondrop = async (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('hover');
+        const file = e.dataTransfer.files[0];
+        if(!file) return;
+
+        s3Log.innerText = `Streaming ${file.name} directly to RAM...`;
+
+        try {
+            const res = await fetch('/diagnostics/s3/upload', {
+                method: 'POST',
+                body: file, // Direct binary stream from browser
+                headers: {
+                    'Content-Type': file.type || 'application/octet-stream',
+                    'x-filename': file.name
+                }
+            });
+            const data = await res.json();
+            s3Log.innerText = JSON.stringify(data, null, 2);
+            if(data.key) document.getElementById('s3-key-input').value = data.key;
+        } catch (err) {
+            s3Log.innerText = "Error: " + err;
+        }
+    };
+
+    // --- S3: URL & Delete ---
+    async function getS3Url() {
+        const key = document.getElementById('s3-key-input').value;
+        if(!key) return alert("Enter a key first");
+
+        const res = await fetch(`/diagnostics/s3/url?key=${encodeURIComponent(key)}`);
+        const data = await res.json();
+        s3Log.innerHTML = `Generated URL:\n<a href="${data}" target="_blank" style="color:#a6e22e">${data}</a>`;
+    }
+
+    async function deleteS3File() {
+        const key = document.getElementById('s3-key-input').value;
+        if(!key) return alert("Enter a key to delete");
+
+        const res = await fetch('/diagnostics/s3/delete', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ key })
+        });
+        s3Log.innerText = res.ok ? `Successfully deleted: ${key}` : "Delete failed.";
+    }
+
+    // --- DB: Custom Query ---
+    async function runQuery() {
+        const sql = document.getElementById('db-query').value;
+        const log = document.getElementById('db-log');
+        log.innerText = "Executing query...";
+
+        const res = await fetch('/diagnostics/db/query', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ sql })
+        });
+        const data = await res.json();
+        log.innerText = JSON.stringify(data, null, 2);
+    }
+
+    // --- SMTP ---
+    async function sendTestEmail() {
+        const log = document.getElementById('smtp-log');
+        log.innerText = "Sending email...";
+
+        const payload = {
+            to: document.getElementById('smtp-to').value,
+            subject: document.getElementById('smtp-sub').value,
+            body: document.getElementById('smtp-body').value,
+            is_html: document.getElementById('smtp-is-html').checked // 👈 Added
+        };
+
+        const res = await fetch('/diagnostics/smtp/send', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        });
+        log.innerText = await res.text();
+    }
+</script>
+</body>
+</html>

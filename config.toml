@@ -5,8 +5,12 @@ url = "postgres://postgres:root@127.0.0.1:5432/backend"
 
 
 [log]
+filter_level = "info"
 file_name = "app.log"
+directory = "logs"     # Make sure this folder exists in your project root!
 rolling = "daily"
+stdout = true       # 👈 CRITICAL: If this is true, it won't write to the file
+file_writer=true
 # added by Manish  (below), also prefer stf::fs there to load those in main
 [tls]
 cert = "certs/pem/cert.pem"

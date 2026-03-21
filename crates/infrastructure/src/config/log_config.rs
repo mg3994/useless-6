@@ -14,6 +14,8 @@ pub struct LogConfig {
     pub with_ansi: bool,
     #[serde(default = "default_true")]
     pub stdout: bool, // as it will just print in std console
+    #[serde(default = "default_true")]
+    pub file_writer:bool, // as it will just write to log directory
     #[serde(default = "default_directory")]
     pub directory: String,
     #[serde(default = "default_file_name")]
@@ -41,6 +43,7 @@ impl Default for LogConfig {
             filter_level: default_filter_level(),
             with_ansi: true,
             stdout: false,
+            file_writer:false,
             directory: default_directory(),
             file_name: default_file_name(),
             rolling: default_rolling(),
@@ -76,6 +79,12 @@ impl LogConfig {
     /// Will append log to stdout.
     pub fn stdout(mut self, stdout: bool) -> Self {
         self.stdout = stdout;
+        self
+    }
+
+
+    pub fn file_writer(mut self, file_writer: bool) -> Self {
+        self.file_writer = file_writer;
         self
     }
 

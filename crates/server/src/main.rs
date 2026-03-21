@@ -12,8 +12,8 @@ async fn main() {
     infrastructure::config::init();
     let config = infrastructure::config::get();
     // db::init(&config.db).await; //TODO Uncomment
-    // smtp
-    // s3
+    // smtp init
+    // s3 init
     let _guard = infrastructure::log::init(&config.log); // todo change to init
     tracing::info!("log level: {}", &config.log.filter_level);
 

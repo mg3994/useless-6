@@ -1,0 +1,29 @@
+[package]
+name = "diagnostics"
+version.workspace = true
+description.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+homepage.workspace = true
+publish.workspace = true
+documentation.workspace = true
+repository.workspace = true
+
+[dependencies]
+salvo.workspace = true
+tokio.workspace = true
+askama.workspace = true
+services = {path = "../../crates/services"}
+infrastructure = {path = "../../crates/infrastructure"}
+typedef = {path = "../../crates/typedef"}
+db = {path = "../../crates/db"}
+s3 = {path = "../../crates/s3"}
+smtp = {path = "../../crates/smtp"}
+sqlx.workspace = true
+serde ={workspace = true,features = ["derive"]}
+
+
